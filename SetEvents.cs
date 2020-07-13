@@ -36,6 +36,18 @@ namespace BetterThanFalseTrail
                     }
                 }
             }
+            if (ev.OldItem.id == ItemType.MicroHID)
+            {
+                for (int i = 0; i < ev.Player.inventory.items.Count; i++)
+                {
+                    if (ev.Player.inventory.items[i].id == ItemType.MicroHID)
+                    {
+                        Map.SpawnItem(ItemType.MicroHID, ev.Player.inventory.items[i].durability, ev.Player.gameObject.transform.position, ev.Player.gameObject.transform.rotation, ev.Player.inventory.items[i].modSight, ev.Player.inventory.items[i].modBarrel, ev.Player.inventory.items[i].modOther);
+                        ev.Player.inventory.items.Remove(ev.Player.inventory.items[i]);
+                        break;
+                    }
+                }
+            }
         }
 
         internal void OnGeneratorInserted(ref GeneratorInsertTabletEvent ev)
@@ -59,6 +71,17 @@ namespace BetterThanFalseTrail
                     SetItemModsComponent setItemModsComponent = ev.Player.gameObject.AddComponent<SetItemModsComponent>();
                     setItemModsComponent.ItemType = ev.Item.info.itemId;
                     setItemModsComponent.PlayerHub = ev.Player;
+                }
+            }
+            if (ev.Item.info.itemId == ItemType.MicroHID)
+            {
+                if (ev.Player.inventory.items.Where(x => x.id == ItemType.MicroHID).FirstOrDefault() != default)
+                {
+                    ev.Allow = false;
+                }
+                else
+                {
+                    ev.Player.gameObject.AddComponent<MicroHIDDropComponent>();
                 }
             }
         }
