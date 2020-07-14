@@ -128,14 +128,7 @@ namespace BetterThanFalseTrail
             }
             if (ev.Item.info.itemId == ItemType.MicroHID)
             {
-                if (ev.Player.inventory.items.Where(x => x.id == ItemType.MicroHID).FirstOrDefault() != default)
-                {
-                    ev.Allow = false;
-                }
-                else
-                {
-                    ev.Player.gameObject.AddComponent<MicroHIDDropComponent>();
-                }
+                ev.Player.gameObject.AddComponent<MicroHIDDropComponent>();
             }
         }
 

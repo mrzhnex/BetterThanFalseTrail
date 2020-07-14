@@ -19,7 +19,10 @@ namespace BetterThanFalseTrail
 
             if (Timer > Global.TimeToPickupMicroHID)
             {
-                MicroHIDDrop();
+                if (PlayerHub.GetCurrentItem().id != ItemType.MicroHID)
+                {
+                    MicroHIDDrop();
+                }
                 Destroy(this);
             }
         }

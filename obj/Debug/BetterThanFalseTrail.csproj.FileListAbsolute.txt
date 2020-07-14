@@ -64,3 +64,4 @@ E:\SCP SL plugins\BetterThanFalseTrail\obj\Debug\BetterThanFalseTrail.csproj.Cop
 E:\SCP SL plugins\BetterThanFalseTrail\obj\Debug\BetterThanFalseTrail.dll
 E:\SCP SL plugins\BetterThanFalseTrail\obj\Debug\BetterThanFalseTrail.pdb
 E:\SCP SL plugins\BetterThanFalseTrail\obj\Debug\BetterThanFalseTrail.csprojAssemblyReference.cache
+E:\SCP SL plugins\BetterThanFalseTrail\obj\Debug\BetterThanFalseTrail.csproj.CoreCompileInputs.cache
