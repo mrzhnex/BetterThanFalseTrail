@@ -13,6 +13,11 @@ namespace BetterThanFalseTrail
             Events.GeneratorInsertedEvent += SetEvents.OnGeneratorInserted;
             Events.PickupItemEvent += SetEvents.OnPickupItem;
             Events.ItemChangedEvent += SetEvents.OnItemChanged;
+            Events.UseMedicalItemEvent += SetEvents.OnUseMedicalItem;
+            Events.UsedMedicalItemEvent += SetEvents.OnUsedMedicalItem;
+            Events.CancelMedicalItemEvent += SetEvents.OnCancelMedicalItem;
+            Events.PlayerDeathEvent += SetEvents.OnPlayerDeath;
+            Events.PlayerSpawnEvent += SetEvents.OnPlayerSpawn;
             Log.Info(getName + " on");
         }
 
@@ -21,6 +26,11 @@ namespace BetterThanFalseTrail
             Events.GeneratorInsertedEvent -= SetEvents.OnGeneratorInserted;
             Events.PickupItemEvent -= SetEvents.OnPickupItem;
             Events.ItemChangedEvent -= SetEvents.OnItemChanged;
+            Events.UseMedicalItemEvent -= SetEvents.OnUseMedicalItem;
+            Events.UsedMedicalItemEvent -= SetEvents.OnUsedMedicalItem;
+            Events.CancelMedicalItemEvent -= SetEvents.OnCancelMedicalItem;
+            Events.PlayerDeathEvent -= SetEvents.OnPlayerDeath;
+            Events.PlayerSpawnEvent -= SetEvents.OnPlayerSpawn;
             Log.Info(getName + " off");
         }
 

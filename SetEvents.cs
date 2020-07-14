@@ -50,6 +50,59 @@ namespace BetterThanFalseTrail
             }
         }
 
+        internal void OnPlayerSpawn(PlayerSpawnEvent ev)
+        {
+            if (ev.Player.gameObject.GetComponent<UseMedicalItemComponent>())
+            {
+                UnityEngine.Object.Destroy(ev.Player.gameObject.GetComponent<UseMedicalItemComponent>());
+            }
+            if (ev.Player.gameObject.GetComponent<MicroHIDDropComponent>())
+            {
+                UnityEngine.Object.Destroy(ev.Player.gameObject.GetComponent<MicroHIDDropComponent>());
+            }
+        }
+
+        internal void OnPlayerDeath(ref PlayerDeathEvent ev)
+        {
+            if (ev.Player.gameObject.GetComponent<UseMedicalItemComponent>())
+            {
+                UnityEngine.Object.Destroy(ev.Player.gameObject.GetComponent<UseMedicalItemComponent>());
+            }
+            if (ev.Player.gameObject.GetComponent<MicroHIDDropComponent>())
+            {
+                UnityEngine.Object.Destroy(ev.Player.gameObject.GetComponent<MicroHIDDropComponent>());
+            }
+        }
+
+        internal void OnCancelMedicalItem(MedicalItemEvent ev)
+        {
+            if (ev.Player.gameObject.GetComponent<UseMedicalItemComponent>())
+            {
+                UnityEngine.Object.Destroy(ev.Player.gameObject.GetComponent<UseMedicalItemComponent>());
+            }
+        }
+
+        internal void OnUsedMedicalItem(UsedMedicalItemEvent ev)
+        {
+            if (ev.Player.gameObject.GetComponent<UseMedicalItemComponent>())
+            {
+                UnityEngine.Object.Destroy(ev.Player.gameObject.GetComponent<UseMedicalItemComponent>());
+            }
+        }
+
+        internal void OnUseMedicalItem(MedicalItemEvent ev)
+        {
+            if (ev.Item != ItemType.SCP500)
+            {
+                if (ev.Player.gameObject.GetComponent<UseMedicalItemComponent>())
+                {
+                    UnityEngine.Object.Destroy(ev.Player.gameObject.GetComponent<UseMedicalItemComponent>());
+                }
+                UseMedicalItemComponent useMedicalItemComponent = ev.Player.gameObject.AddComponent<UseMedicalItemComponent>();
+                useMedicalItemComponent.ItemType = ev.Item;
+            }
+        }
+
         internal void OnGeneratorInserted(ref GeneratorInsertTabletEvent ev)
         {
             if (!AccessGeneratorInsert.Contains(ev.Player.GetRole()))
