@@ -20,10 +20,10 @@ namespace BetterThanFalseTrail
         {
             foreach (ReferenceHub referenceHub in Player.GetHubs())
             {
-                referenceHub.ClearBroadcasts();
-                referenceHub.Broadcast(10, "Выберите командира МОГ", true);
                 if (PlayersVotes.ContainsKey(referenceHub.GetPlayerId()))
                 {
+                    referenceHub.ClearBroadcasts();
+                    referenceHub.Broadcast(10, "Выберите командира МОГ", true);
                     referenceHub.SendConsoleMessage(GetVoteMessage(), "yellow");
                 }
             }

@@ -61,6 +61,10 @@ namespace BetterThanFalseTrail
             {
                 foreach (ReferenceHub referenceHub in ev.ToRespawn)
                 {
+                    if (referenceHub.GetRole() != RoleType.Spectator)
+                    {
+                        continue;
+                    }
                     Global.PlayersVotes.Add(referenceHub.GetPlayerId(), 0);
                     if (Global.InWhitelistCommander(referenceHub.GetUserId()))
                     {
@@ -221,13 +225,15 @@ namespace BetterThanFalseTrail
                         {
                             LateSpawnComponent lateSpawnComponent = ev.Player.gameObject.AddComponent<LateSpawnComponent>();
                             lateSpawnComponent.RoleType = commander.GetRole();
-                            commander.SetRole(RoleType.NtfCommander);
+                            LateSpawnComponent lateSpawnComponent3 = commander.gameObject.AddComponent<LateSpawnComponent>();
+                            lateSpawnComponent3.RoleType = RoleType.NtfCommander;
                         }
                         else
                         {
                             LateSpawnComponent lateSpawnComponent = ev.Player.gameObject.AddComponent<LateSpawnComponent>();
                             lateSpawnComponent.RoleType = RoleType.NtfCadet;
-                            commander.SetRole(RoleType.NtfCommander);
+                            LateSpawnComponent lateSpawnComponent4 = commander.gameObject.AddComponent<LateSpawnComponent>();
+                            lateSpawnComponent4.RoleType = RoleType.NtfCommander;
                         }
                         return;
                     }
@@ -248,7 +254,8 @@ namespace BetterThanFalseTrail
                 {
                     System.Random random = new System.Random();
                     ReferenceHub commander = spectators[random.Next(0, spectators.Count)];
-                    commander.SetRole(RoleType.NtfCommander);
+                    LateSpawnComponent lateSpawnComponent5 = commander.gameObject.AddComponent<LateSpawnComponent>();
+                    lateSpawnComponent5.RoleType = RoleType.NtfCommander;
                 }
                 else
                 {
