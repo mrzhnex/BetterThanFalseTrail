@@ -59,6 +59,7 @@ namespace BetterThanFalseTrail
         {
             if (!ev.IsChaos)
             {
+                Global.PlayersVotes = new Dictionary<int, int>();
                 foreach (ReferenceHub referenceHub in ev.ToRespawn)
                 {
                     if (referenceHub.GetRole() != RoleType.Spectator)
