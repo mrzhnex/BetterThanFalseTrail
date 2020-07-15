@@ -65,14 +65,21 @@
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\.Smod MP2.PreAlpha &amp; Exiled\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\.Smod MP2.PreAlpha &amp; Exiled\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommanderVoteComponent.cs" />
     <Compile Include="Global.cs" />
+    <Compile Include="LateSpawnComponent.cs" />
     <Compile Include="MainSettings.cs" />
     <Compile Include="MicroHIDDropComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SetEvents.cs" />
     <Compile Include="SetItemModsComponent.cs" />
+    <Compile Include="SpawnWithWhitelistComponent.cs" />
     <Compile Include="UseMedicalItemComponent.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

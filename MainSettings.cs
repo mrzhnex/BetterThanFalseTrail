@@ -18,6 +18,10 @@ namespace BetterThanFalseTrail
             Events.CancelMedicalItemEvent += SetEvents.OnCancelMedicalItem;
             Events.PlayerDeathEvent += SetEvents.OnPlayerDeath;
             Events.PlayerSpawnEvent += SetEvents.OnPlayerSpawn;
+            Events.WaitingForPlayersEvent += SetEvents.OnWaitingsForPlayers;
+            Events.RoundStartEvent += SetEvents.OnRoundStart;
+            Events.ConsoleCommandEvent += SetEvents.OnConsoleCommand;
+            Events.TeamRespawnEvent += SetEvents.OnTeamRespawn;
             Log.Info(getName + " on");
         }
 
@@ -31,6 +35,10 @@ namespace BetterThanFalseTrail
             Events.CancelMedicalItemEvent -= SetEvents.OnCancelMedicalItem;
             Events.PlayerDeathEvent -= SetEvents.OnPlayerDeath;
             Events.PlayerSpawnEvent -= SetEvents.OnPlayerSpawn;
+            Events.WaitingForPlayersEvent -= SetEvents.OnWaitingsForPlayers;
+            Events.RoundStartEvent -= SetEvents.OnRoundStart;
+            Events.ConsoleCommandEvent -= SetEvents.OnConsoleCommand;
+            Events.TeamRespawnEvent -= SetEvents.OnTeamRespawn;
             Log.Info(getName + " off");
         }
 
