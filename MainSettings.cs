@@ -4,8 +4,8 @@ namespace BetterThanFalseTrail
 {
     public class MainSettings : Plugin
     {
-        public override string getName => "BetterThanFalseTrail";
-        private SetEvents SetEvents;
+        public override string getName => nameof(BetterThanFalseTrail);
+        public SetEvents SetEvents { get; set; }
 
         public override void OnEnable()
         {

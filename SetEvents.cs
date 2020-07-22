@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace BetterThanFalseTrail
 {
-    internal class SetEvents
+    public class SetEvents
     {
         internal void OnItemChanged(ItemChangedEvent ev)
         {
