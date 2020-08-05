@@ -34,21 +34,19 @@
   <ItemGroup>
     <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\.Smod MP2.PreAlpha &amp; Exiled\Exiled\MedicalAssembly\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\.Smod MP2.PreAlpha &amp; Exiled\MedicalAssembly\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="EXILED">
-      <HintPath>..\.Smod MP2.PreAlpha &amp; Exiled\Exiled\EXILED\EXILED.dll</HintPath>
+    <Reference Include="Exiled.API">
+      <HintPath>..\.Smod MP2.PreAlpha &amp; Exiled\EXILED\Plugins\dependencies\Exiled.API.dll</HintPath>
     </Reference>
-    <Reference Include="EXILED_Events">
-      <HintPath>..\.Smod MP2.PreAlpha &amp; Exiled\Exiled\Plugins\EXILED_Events.dll</HintPath>
+    <Reference Include="Exiled.Events">
+      <HintPath>..\.Smod MP2.PreAlpha &amp; Exiled\EXILED\Plugins\Exiled.Events.dll</HintPath>
     </Reference>
-    <Reference Include="EXILED_Idler">
-      <HintPath>..\.Smod MP2.PreAlpha &amp; Exiled\Exiled\Plugins\EXILED_Idler.dll</HintPath>
+    <Reference Include="Exiled.Loader">
+      <HintPath>..\.Smod MP2.PreAlpha &amp; Exiled\EXILED\Exiled.Loader.dll</HintPath>
     </Reference>
-    <Reference Include="EXILED_Permissions">
-      <HintPath>..\.Smod MP2.PreAlpha &amp; Exiled\Exiled\Plugins\EXILED_Permissions.dll</HintPath>
-    </Reference>
-    <Reference Include="Mirror">
+    <Reference Include="Mirror, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\.Smod MP2.PreAlpha &amp; Exiled\Managed\Mirror.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -59,10 +57,12 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine">
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\.Smod MP2.PreAlpha &amp; Exiled\Managed\UnityEngine.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.CoreModule">
+    <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\.Smod MP2.PreAlpha &amp; Exiled\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -72,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommanderVoteComponent.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="LateSpawnComponent.cs" />
     <Compile Include="MainSettings.cs" />

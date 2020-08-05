@@ -1,5 +1,4 @@
-﻿using EXILED;
-using EXILED.Extensions;
+﻿using Exiled.API.Features;
 using UnityEngine;
 
 namespace BetterThanFalseTrail
@@ -9,7 +8,7 @@ namespace BetterThanFalseTrail
         private readonly float TimeIsUp = 0.1f;
         private float Timer = 0.0f;
         public ItemType ItemType;
-        public ReferenceHub PlayerHub;
+        public Player Player;
         private bool Remove = false;
         private Inventory.SyncItemInfo SyncItemInfo;
         public void Update()
@@ -19,17 +18,17 @@ namespace BetterThanFalseTrail
             {
                 if (Remove)
                 {
-                    PlayerHub.AddItem(SyncItemInfo);
+                    Player.AddItem(SyncItemInfo);
                     Destroy(this);
                 }
                 else
                 {
-                    for (int i = 0; i < PlayerHub.inventory.items.Count; i++)
+                    for (int i = 0; i < Player.Inventory.items.Count; i++)
                     {
-                        if (PlayerHub.inventory.items[i].id == ItemType)
+                        if (Player.Inventory.items[i].id == ItemType)
                         {
-                            SyncItemInfo = PlayerHub.inventory.items[i];
-                            PlayerHub.inventory.items.Remove(PlayerHub.inventory.items[i]);
+                            SyncItemInfo = Player.Inventory.items[i];
+                            Player.Inventory.items.Remove(Player.Inventory.items[i]);
                             break;
                         }
                     }

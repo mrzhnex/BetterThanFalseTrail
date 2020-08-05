@@ -1,4 +1,4 @@
-﻿using EXILED.Extensions;
+﻿using Exiled.API.Features;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,19 +12,19 @@ namespace BetterThanFalseTrail
         public Dictionary<int, int> PlayersVotes = new Dictionary<int, int>();
         
         public List<int> PlayersAlreadyVotes = new List<int>();
-        ReferenceHub Commander;
+        Player Commander;
 
         private bool CommanderChosen = false;
 
         public void Start()
         {
-            foreach (ReferenceHub referenceHub in Player.GetHubs())
+            foreach (Player player in Player.List)
             {
-                if (PlayersVotes.ContainsKey(referenceHub.GetPlayerId()))
+                if (PlayersVotes.ContainsKey(player.Id))
                 {
-                    referenceHub.ClearBroadcasts();
-                    referenceHub.Broadcast(10, "Выберите командира МОГ", true);
-                    referenceHub.SendConsoleMessage(GetVoteMessage(), "yellow");
+                    player.ClearBroadcasts();
+                    player.Broadcast(10, "Выберите командира МОГ. (Откройте консоль и используйте команду .vote)", Broadcast.BroadcastFlags.Normal);
+                    player.SendConsoleMessage(GetVoteMessage(), "yellow");
                 }
             }
         }
@@ -34,7 +34,7 @@ namespace BetterThanFalseTrail
             string result = "Список игроков, доступных для голосования:";
             foreach (KeyValuePair<int, int> kvp in PlayersVotes)
             {
-                result = result + "\n" + kvp.Key + ") " + (Player.GetPlayer(kvp.Key) != null ? Player.GetPlayer(kvp.Key).nicknameSync.Network_myNickSync : "Игрок не найден");
+                result = result + "\n" + kvp.Key + ") " + (Player.Get(kvp.Key) != null ? Player.Get(kvp.Key).Nickname : "Игрок не найден");
             }
             return result;
         }
@@ -65,14 +65,14 @@ namespace BetterThanFalseTrail
                                 playerId = kvp.Key;
                             }
                         }
-                        Commander = Player.GetPlayer(playerId);
+                        Commander = Player.Get(playerId);
                         if (Commander != null)
                         {
                             CommanderChosen = true;
-                            Global.WhitelistCommander.Add(Commander.GetUserId().Replace("@steam", string.Empty));
+                            Global.WhitelistCommander.Add(Commander.UserId.Replace("@steam", string.Empty));
                             Commander.SetRole(RoleType.NtfCommander);
                             Commander.ClearBroadcasts();
-                            Commander.Broadcast(10, "Вы были выбраны командиром МОГ", true);
+                            Commander.Broadcast(10, "Вы были выбраны командиром МОГ", Broadcast.BroadcastFlags.Normal);
                         }
                         Destroy(this);
                     }
@@ -83,9 +83,9 @@ namespace BetterThanFalseTrail
         public void OnDestroy()
         {
             Global.PlayersVotes = new Dictionary<int, int>();
-            if (Global.WhitelistCommander.Contains(Commander.GetUserId().Replace("@steam", string.Empty)))
+            if (Global.WhitelistCommander.Contains(Commander.UserId.Replace("@steam", string.Empty)))
             {
-                Global.WhitelistCommander.Remove(Commander.GetUserId().Replace("@steam", string.Empty));
+                Global.WhitelistCommander.Remove(Commander.UserId.Replace("@steam", string.Empty));
             }
         }
     }

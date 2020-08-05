@@ -1,5 +1,5 @@
-﻿using EXILED;
-using EXILED.Extensions;
+﻿using Exiled.API.Features;
+using Exiled.Events.EventArgs;
 using RemoteAdmin;
 using System;
 using System.Collections.Generic;
@@ -12,64 +12,47 @@ namespace BetterThanFalseTrail
 {
     public class SetEvents
     {
-        internal void OnItemChanged(ItemChangedEvent ev)
+        internal void OnMedicalItemUsed(UsedMedicalItemEventArgs ev)
         {
-            if (ev.Player.GetRole() == RoleType.Scientist)
+            if (ev.Player.GameObject.GetComponent<UseMedicalItemComponent>())
             {
-                if (ev.NewItem.id == ItemType.GunE11SR)
-                {
-                    for (int i = 0; i < ev.Player.inventory.items.Count; i++)
-                    {
-                        if (ev.Player.inventory.items[i].id == ItemType.GunE11SR)
-                        {
-                            Map.SpawnItem(ItemType.GunE11SR, ev.Player.inventory.items[i].durability, ev.Player.gameObject.transform.position, ev.Player.gameObject.transform.rotation, ev.Player.inventory.items[i].modSight, ev.Player.inventory.items[i].modBarrel, ev.Player.inventory.items[i].modOther);
-                            ev.Player.inventory.items.Remove(ev.Player.inventory.items[i]);
-                            break;
-                        }
-                    }
-                }
-                else if (ev.NewItem.id == ItemType.GunLogicer)
-                {
-                    for (int i = 0; i < ev.Player.inventory.items.Count; i++)
-                    {
-                        if (ev.Player.inventory.items[i].id == ItemType.GunLogicer)
-                        {
-                            Map.SpawnItem(ItemType.GunLogicer, ev.Player.inventory.items[i].durability, ev.Player.gameObject.transform.position, ev.Player.gameObject.transform.rotation, ev.Player.inventory.items[i].modSight, ev.Player.inventory.items[i].modBarrel, ev.Player.inventory.items[i].modOther);
-                            ev.Player.inventory.items.Remove(ev.Player.inventory.items[i]);
-                            break;
-                        }
-                    }
-                }
-            }
-            if (ev.OldItem.id == ItemType.MicroHID)
-            {
-                for (int i = 0; i < ev.Player.inventory.items.Count; i++)
-                {
-                    if (ev.Player.inventory.items[i].id == ItemType.MicroHID)
-                    {
-                        Map.SpawnItem(ItemType.MicroHID, ev.Player.inventory.items[i].durability, ev.Player.gameObject.transform.position, ev.Player.gameObject.transform.rotation, ev.Player.inventory.items[i].modSight, ev.Player.inventory.items[i].modBarrel, ev.Player.inventory.items[i].modOther);
-                        ev.Player.inventory.items.Remove(ev.Player.inventory.items[i]);
-                        break;
-                    }
-                }
+                UnityEngine.Object.Destroy(ev.Player.GameObject.GetComponent<UseMedicalItemComponent>());
             }
         }
 
-        internal void OnTeamRespawn(ref TeamRespawnEvent ev)
+        internal void OnUsingMedicalItem(UsingMedicalItemEventArgs ev)
         {
-            if (!ev.IsChaos)
+            if (ev.Item != ItemType.SCP500)
+            {
+                if (ev.Player.GameObject.GetComponent<UseMedicalItemComponent>())
+                {
+                    UnityEngine.Object.Destroy(ev.Player.GameObject.GetComponent<UseMedicalItemComponent>());
+                }
+                UseMedicalItemComponent useMedicalItemComponent = ev.Player.GameObject.AddComponent<UseMedicalItemComponent>();
+                useMedicalItemComponent.ItemType = ev.Item;
+            }
+        }
+
+        internal void OnRoundStarted()
+        {
+            GameObject.FindWithTag("FemurBreaker").AddComponent<SpawnWithWhitelistComponent>();
+        }
+
+        internal void OnRespawningTeam(RespawningTeamEventArgs ev)
+        {
+            if (ev.NextKnownTeam == Respawning.SpawnableTeamType.NineTailedFox)
             {
                 Global.PlayersVotes = new Dictionary<int, int>();
-                foreach (ReferenceHub referenceHub in ev.ToRespawn)
+                foreach (Player player in ev.Players)
                 {
-                    if (referenceHub.GetRole() != RoleType.Spectator)
+                    if (player.Role != RoleType.Spectator)
                     {
                         continue;
                     }
-                    Global.PlayersVotes.Add(referenceHub.GetPlayerId(), 0);
-                    if (Global.InWhitelistCommander(referenceHub.GetUserId()))
+                    Global.PlayersVotes.Add(player.Id, 0);
+                    if (Global.InWhitelistCommander(player.UserId))
                     {
-                        Global.AvailableCommanderPlayerId = referenceHub.GetPlayerId();
+                        Global.AvailableCommanderPlayerId.Add(player.Id);
                         Global.PlayersVotes = new Dictionary<int, int>();
                         break;
                     }
@@ -77,34 +60,54 @@ namespace BetterThanFalseTrail
             }
         }
 
-        internal void OnConsoleCommand(ConsoleCommandEvent ev)
+        internal void OnChangingRole(ChangingRoleEventArgs ev)
         {
-            if (ev.Command.ToLower() == "islegit")
+            if (ev.Player.GameObject.GetComponent<UseMedicalItemComponent>())
             {
-                if (Physics.Raycast((ev.Player.gameObject.GetComponent<Scp049PlayerScript>().plyCam.transform.forward * 1.001f) + ev.Player.gameObject.transform.position, ev.Player.gameObject.GetComponent<Scp049PlayerScript>().plyCam.transform.forward, out RaycastHit hit, 2.0f))
+                UnityEngine.Object.Destroy(ev.Player.GameObject.GetComponent<UseMedicalItemComponent>());
+            }
+            if (ev.Player.GameObject.GetComponent<MicroHIDDropComponent>())
+            {
+                UnityEngine.Object.Destroy(ev.Player.GameObject.GetComponent<MicroHIDDropComponent>());
+            }
+            if (ev.Player.Id == Global.CurrentManagerPlayerId)
+            {
+                Global.CurrentManagerPlayerId = 0;
+            }
+            if (ev.Player.Id == Global.CurrentSecurityChiefPlayerId)
+            {
+                Global.CurrentSecurityChiefPlayerId = 0;
+            }
+        }
+
+        internal void OnSendingConsoleCommand(SendingConsoleCommandEventArgs ev)
+        {
+            if (ev.Name.ToLower() == "islegit")
+            {
+                if (Physics.Raycast((ev.Player.PlayerCamera.forward * 1.001f) + ev.Player.GameObject.transform.position, ev.Player.PlayerCamera.forward, out RaycastHit hit, 2.0f))
                 {
                     if (hit.transform.GetComponent<QueryProcessor>() == null)
                     {
                         ev.ReturnMessage = "Вы не смотрите на проверяемого человека, либо находитесь слишком далеко от него";
                         return;
                     }
-                    ReferenceHub target = Player.GetPlayer(hit.transform.GetComponent<QueryProcessor>().PlayerId);
+                    Player target = Player.Get(hit.transform.GetComponent<QueryProcessor>().PlayerId);
                     if (target == null)
                     {
                         ev.ReturnMessage = "Вы не смотрите на проверяемого человека, либо находитесь слишком далеко от него";
                         return;
                     }
-                    if (!AllCards.Contains(target.GetCurrentItem().id))
+                    if (!AllCards.Contains(target.CurrentItem.id))
                     {
                         ev.ReturnMessage = "У проверяемого нет удостоверения";
                         return;
                     }
-                    if (target.GetPlayerId() == Global.CurrentManagerPlayerId && target.GetCurrentItem().id == ItemType.KeycardFacilityManager)
+                    if (target.Id == Global.CurrentManagerPlayerId && target.CurrentItem.id == ItemType.KeycardFacilityManager)
                     {
                         ev.ReturnMessage = "Перед вами настоящий Директор Зоны";
                         return;
                     }
-                    else if (target.GetPlayerId() == Global.CurrentSecurityChiefPlayerId && target.GetCurrentItem().id == ItemType.KeycardNTFLieutenant)
+                    else if (target.Id == Global.CurrentSecurityChiefPlayerId && target.CurrentItem.id == ItemType.KeycardNTFLieutenant)
                     {
                         ev.ReturnMessage = "Перед вами настоящий начальник СБ";
                         return;
@@ -118,7 +121,7 @@ namespace BetterThanFalseTrail
                 ev.ReturnMessage = "Вы не смотрите на проверяемого человека, либо находитесь слишком далеко от него";
                 return;
             }
-            if (ev.Command.ToLower().Contains("vote"))
+            if (ev.Name.ToLower().Contains("vote"))
             {
                 CommanderVoteComponent commanderVoteComponent = GameObject.FindWithTag("FemurBreaker").GetComponent<CommanderVoteComponent>();
                 if (commanderVoteComponent == null)
@@ -127,23 +130,22 @@ namespace BetterThanFalseTrail
                     return;
                 }
 
-                string[] args = ev.Command.Split(' ');
-                if (args.Length != 2)
+                if (ev.Arguments.Count != 1)
                 {
                     ev.ReturnMessage = "Неправильное использование команды!";
                     return;
                 }
-                if (!commanderVoteComponent.PlayersVotes.ContainsKey(ev.Player.GetPlayerId()))
+                if (!commanderVoteComponent.PlayersVotes.ContainsKey(ev.Player.Id))
                 {
                     ev.ReturnMessage = "Вы не можете голосовать";
                     return;
                 }
-                if (commanderVoteComponent.PlayersAlreadyVotes.Contains(ev.Player.GetPlayerId()))
+                if (commanderVoteComponent.PlayersAlreadyVotes.Contains(ev.Player.Id))
                 {
                     ev.ReturnMessage = "Вы уже проголосовали";
                     return;
                 }
-                if (!int.TryParse(args[1], out int playerId))
+                if (!int.TryParse(ev.Arguments[0], out int playerId))
                 {
                     ev.ReturnMessage = "Это не номер игрока!";
                     return;
@@ -154,20 +156,182 @@ namespace BetterThanFalseTrail
                     return;
                 }
                 commanderVoteComponent.PlayersVotes[playerId]++;
-                commanderVoteComponent.PlayersAlreadyVotes.Add(ev.Player.GetPlayerId());
+                commanderVoteComponent.PlayersAlreadyVotes.Add(ev.Player.Id);
                 ev.ReturnMessage = "Вы проголосовали за игрока с номером " + playerId;
                 return;
             }
         }
 
-        internal void OnRoundStart()
+        internal void OnSendingRemoteAdminCommand(SendingRemoteAdminCommandEventArgs ev)
         {
-            GameObject.FindWithTag("FemurBreaker").AddComponent<SpawnWithWhitelistComponent>();
+            if (ev.Arguments.Count != 2 || ev.Name.ToLower() != "forceclass" || !int.TryParse(ev.Arguments[1], out int roleId) || roleId != 12)
+                return;
+            if (!int.TryParse(ev.Arguments[1].Substring(0, ev.Arguments[0].Length - 1), out int playerId))
+                return;
+            if (!Global.AvailableCommanderPlayerId.Contains(playerId))
+            {
+                Global.AvailableCommanderPlayerId.Add(playerId);
+            }
+        }
+
+        internal void OnStoppingMedicalItem(StoppingMedicalItemEventArgs ev)
+        {
+            if (ev.Player.GameObject.GetComponent<UseMedicalItemComponent>())
+            {
+                UnityEngine.Object.Destroy(ev.Player.GameObject.GetComponent<UseMedicalItemComponent>());
+            }
+        }
+
+        internal void OnSpawning(SpawningEventArgs ev)
+        {
+            if (ev.Player.GameObject.GetComponent<UseMedicalItemComponent>())
+            {
+                UnityEngine.Object.Destroy(ev.Player.GameObject.GetComponent<UseMedicalItemComponent>());
+            }
+            if (ev.Player.GameObject.GetComponent<MicroHIDDropComponent>())
+            {
+                UnityEngine.Object.Destroy(ev.Player.GameObject.GetComponent<MicroHIDDropComponent>());
+            }
+            if (ev.Player.Id == Global.CurrentManagerPlayerId)
+            {
+                Global.CurrentManagerPlayerId = 0;
+            }
+            if (ev.Player.Id == Global.CurrentSecurityChiefPlayerId)
+            {
+                Global.CurrentSecurityChiefPlayerId = 0;
+            }
+
+            if (ev.RoleType == RoleType.NtfCommander && !Global.InWhitelistCommander(ev.Player.UserId))
+            {
+                if (Global.AvailableCommanderPlayerId.Contains(ev.Player.Id))
+                {
+                    Global.AvailableCommanderPlayerId.Remove(ev.Player.Id);
+                    return;
+                }
+                if (Global.AvailableCommanderPlayerId.Count != 0)
+                {
+                    Player commander = Player.Get(Global.AvailableCommanderPlayerId.First());
+                    if (commander != null)
+                    {
+                        Global.AvailableCommanderPlayerId.Remove(commander.Id);
+                        if (commander.Team == Team.MTF)
+                        {
+                            LateSpawnComponent lateSpawnComponent = ev.Player.GameObject.AddComponent<LateSpawnComponent>();
+                            lateSpawnComponent.RoleType = commander.Role;
+                            LateSpawnComponent lateSpawnComponent3 = commander.GameObject.AddComponent<LateSpawnComponent>();
+                            lateSpawnComponent3.RoleType = RoleType.NtfCommander;
+                        }
+                        else
+                        {
+                            LateSpawnComponent lateSpawnComponent = ev.Player.GameObject.AddComponent<LateSpawnComponent>();
+                            lateSpawnComponent.RoleType = RoleType.NtfCadet;
+                            LateSpawnComponent lateSpawnComponent4 = commander.GameObject.AddComponent<LateSpawnComponent>();
+                            lateSpawnComponent4.RoleType = RoleType.NtfCommander;
+                        }
+                        return;
+                    }
+                }
+                List<Player> spectators = new List<Player>();
+                foreach (Player player in Player.List)
+                {
+                    if (!Global.InWhitelistCommander(player.UserId))
+                        continue;
+                    if (player.Role == RoleType.Spectator)
+                    {
+                        spectators.Add(player);
+                    }
+                }
+                LateSpawnComponent lateSpawnComponent2 = ev.Player.GameObject.AddComponent<LateSpawnComponent>();
+                lateSpawnComponent2.RoleType = RoleType.NtfCadet;
+                if (spectators.Count > 0)
+                {
+                    System.Random random = new System.Random();
+                    Player commander = spectators[random.Next(0, spectators.Count)];
+                    LateSpawnComponent lateSpawnComponent5 = commander.GameObject.AddComponent<LateSpawnComponent>();
+                    lateSpawnComponent5.RoleType = RoleType.NtfCommander;
+                }
+                else
+                {
+                    CommanderVoteComponent commanderVoteComponent = GameObject.FindWithTag("FemurBreaker").AddComponent<CommanderVoteComponent>();
+                    commanderVoteComponent.PlayersVotes = Global.PlayersVotes;
+                    Global.PlayersVotes = new Dictionary<int, int>();
+                }
+            }
+        }
+
+        internal void OnChangingItem(ChangingItemEventArgs ev)
+        {
+            if (ev.Player.Role == RoleType.Scientist)
+            {
+                if (ev.NewItem.id == ItemType.GunE11SR)
+                {
+                    for (int i = 0; i < ev.Player.Inventory.items.Count; i++)
+                    {
+                        if (ev.Player.Inventory.items[i].id == ItemType.GunE11SR)
+                        {
+                            ev.Player.DropItem(ev.Player.Inventory.items[i]);
+                            break;
+                        }
+                    }
+                }
+                else if (ev.NewItem.id == ItemType.GunLogicer)
+                {
+                    for (int i = 0; i < ev.Player.Inventory.items.Count; i++)
+                    {
+                        if (ev.Player.Inventory.items[i].id == ItemType.GunLogicer)
+                        {
+                            ev.Player.DropItem(ev.Player.Inventory.items[i]);
+                            break;
+                        }
+                    }
+                }
+            }
+            if (ev.OldItem.id == ItemType.MicroHID)
+            {
+                for (int i = 0; i < ev.Player.Inventory.items.Count; i++)
+                {
+                    if (ev.Player.Inventory.items[i].id == ItemType.MicroHID)
+                    {
+                        ev.Player.DropItem(ev.Player.Inventory.items[i]);
+                        break;
+                    }
+                }
+            }
+        }
+
+        internal void OnPickingUpItem(PickingUpItemEventArgs ev)
+        {
+
+            if (ev.Pickup.ItemId == ItemType.GunE11SR || ev.Pickup.ItemId == ItemType.GunLogicer)
+            {
+                if (ev.Player.Inventory.items.Where(x => x.id == ItemType.GunE11SR).FirstOrDefault() != default || ev.Player.Inventory.items.Where(x => x.id == ItemType.GunLogicer).FirstOrDefault() != default)
+                {
+                    ev.IsAllowed = false;
+                }
+                else
+                {
+                    SetItemModsComponent setItemModsComponent = ev.Player.GameObject.AddComponent<SetItemModsComponent>();
+                    setItemModsComponent.ItemType = ev.Pickup.ItemId;
+                    setItemModsComponent.Player = ev.Player;
+                }
+            }
+            if (ev.Pickup.ItemId == ItemType.MicroHID)
+            {
+                ev.Player.GameObject.AddComponent<MicroHIDDropComponent>();
+            }
+        }
+
+        internal void OnInsertingGeneratorTablet(InsertingGeneratorTabletEventArgs ev)
+        {
+            if (!AccessGeneratorInsert.Contains(ev.Player.Role))
+            {
+                ev.IsAllowed = false;
+            }
         }
 
         internal void OnWaitingsForPlayers()
         {
-            Global.AvailableCommanderPlayerId = 0;
+            Global.AvailableCommanderPlayerId = new List<int>();
             Global.CurrentManagerPlayerId = 0;
             Global.CurrentSecurityChiefPlayerId = 0;
             Global.PlayersVotes = new Dictionary<int, int>();
@@ -188,160 +352,6 @@ namespace BetterThanFalseTrail
             catch (Exception)
             {
                 Log.Info("Error loading " + nameof(Global.WhitelistManager));
-            }
-        }
-
-        internal void OnPlayerSpawn(PlayerSpawnEvent ev)
-        {
-            if (ev.Player.gameObject.GetComponent<UseMedicalItemComponent>())
-            {
-                UnityEngine.Object.Destroy(ev.Player.gameObject.GetComponent<UseMedicalItemComponent>());
-            }
-            if (ev.Player.gameObject.GetComponent<MicroHIDDropComponent>())
-            {
-                UnityEngine.Object.Destroy(ev.Player.gameObject.GetComponent<MicroHIDDropComponent>());
-            }
-            if (ev.Player.GetPlayerId() == Global.CurrentManagerPlayerId)
-            {
-                Global.CurrentManagerPlayerId = 0;
-            }
-            if (ev.Player.GetPlayerId() == Global.CurrentSecurityChiefPlayerId)
-            {
-                Global.CurrentSecurityChiefPlayerId = 0;
-            }
-
-            if (ev.Role == RoleType.NtfCommander && !Global.InWhitelistCommander(ev.Player.GetUserId()))
-            {
-                if (Global.AvailableCommanderPlayerId == ev.Player.GetPlayerId())
-                {
-                    Global.AvailableCommanderPlayerId = 0;
-                    return;
-                }
-                if (Global.AvailableCommanderPlayerId != 0)
-                {
-                    ReferenceHub commander = Player.GetPlayer(Global.AvailableCommanderPlayerId);
-                    if (commander != null)
-                    {
-                        if (commander.GetTeam() == Team.MTF)
-                        {
-                            LateSpawnComponent lateSpawnComponent = ev.Player.gameObject.AddComponent<LateSpawnComponent>();
-                            lateSpawnComponent.RoleType = commander.GetRole();
-                            LateSpawnComponent lateSpawnComponent3 = commander.gameObject.AddComponent<LateSpawnComponent>();
-                            lateSpawnComponent3.RoleType = RoleType.NtfCommander;
-                        }
-                        else
-                        {
-                            LateSpawnComponent lateSpawnComponent = ev.Player.gameObject.AddComponent<LateSpawnComponent>();
-                            lateSpawnComponent.RoleType = RoleType.NtfCadet;
-                            LateSpawnComponent lateSpawnComponent4 = commander.gameObject.AddComponent<LateSpawnComponent>();
-                            lateSpawnComponent4.RoleType = RoleType.NtfCommander;
-                        }
-                        return;
-                    }
-                }
-                List<ReferenceHub> spectators = new List<ReferenceHub>();
-                foreach (ReferenceHub referenceHub in Player.GetHubs())
-                {
-                    if (!Global.InWhitelistCommander(referenceHub.GetUserId()))
-                        continue;
-                    if (referenceHub.GetRole() == RoleType.Spectator)
-                    {
-                        spectators.Add(referenceHub);
-                    }
-                }
-                LateSpawnComponent lateSpawnComponent2 = ev.Player.gameObject.AddComponent<LateSpawnComponent>();
-                lateSpawnComponent2.RoleType = RoleType.NtfCadet;
-                if (spectators.Count > 0)
-                {
-                    System.Random random = new System.Random();
-                    ReferenceHub commander = spectators[random.Next(0, spectators.Count)];
-                    LateSpawnComponent lateSpawnComponent5 = commander.gameObject.AddComponent<LateSpawnComponent>();
-                    lateSpawnComponent5.RoleType = RoleType.NtfCommander;
-                }
-                else
-                {
-                    CommanderVoteComponent commanderVoteComponent = GameObject.FindWithTag("FemurBreaker").AddComponent<CommanderVoteComponent>();
-                    commanderVoteComponent.PlayersVotes = Global.PlayersVotes;
-                    Global.PlayersVotes = new Dictionary<int, int>();
-                }
-            }
-        }
-
-        internal void OnPlayerDeath(ref PlayerDeathEvent ev)
-        {
-            if (ev.Player.gameObject.GetComponent<UseMedicalItemComponent>())
-            {
-                UnityEngine.Object.Destroy(ev.Player.gameObject.GetComponent<UseMedicalItemComponent>());
-            }
-            if (ev.Player.gameObject.GetComponent<MicroHIDDropComponent>())
-            {
-                UnityEngine.Object.Destroy(ev.Player.gameObject.GetComponent<MicroHIDDropComponent>());
-            }
-            if (ev.Player.GetPlayerId() == Global.CurrentManagerPlayerId)
-            {
-                Global.CurrentManagerPlayerId = 0;
-            }
-            if (ev.Player.GetPlayerId() == Global.CurrentSecurityChiefPlayerId)
-            {
-                Global.CurrentSecurityChiefPlayerId = 0;
-            }
-        }
-
-        internal void OnCancelMedicalItem(MedicalItemEvent ev)
-        {
-            if (ev.Player.gameObject.GetComponent<UseMedicalItemComponent>())
-            {
-                UnityEngine.Object.Destroy(ev.Player.gameObject.GetComponent<UseMedicalItemComponent>());
-            }
-        }
-
-        internal void OnUsedMedicalItem(UsedMedicalItemEvent ev)
-        {
-            if (ev.Player.gameObject.GetComponent<UseMedicalItemComponent>())
-            {
-                UnityEngine.Object.Destroy(ev.Player.gameObject.GetComponent<UseMedicalItemComponent>());
-            }
-        }
-
-        internal void OnUseMedicalItem(MedicalItemEvent ev)
-        {
-            if (ev.Item != ItemType.SCP500)
-            {
-                if (ev.Player.gameObject.GetComponent<UseMedicalItemComponent>())
-                {
-                    UnityEngine.Object.Destroy(ev.Player.gameObject.GetComponent<UseMedicalItemComponent>());
-                }
-                UseMedicalItemComponent useMedicalItemComponent = ev.Player.gameObject.AddComponent<UseMedicalItemComponent>();
-                useMedicalItemComponent.ItemType = ev.Item;
-            }
-        }
-
-        internal void OnGeneratorInserted(ref GeneratorInsertTabletEvent ev)
-        {
-            if (!AccessGeneratorInsert.Contains(ev.Player.GetRole()))
-            {
-                ev.Allow = false;
-            }
-        }
-
-        internal void OnPickupItem(ref PickupItemEvent ev)
-        {
-            if (ev.Item.info.itemId == ItemType.GunE11SR || ev.Item.info.itemId == ItemType.GunLogicer)
-            {
-                if (ev.Player.inventory.items.Where(x => x.id == ItemType.GunE11SR).FirstOrDefault() != default || ev.Player.inventory.items.Where(x => x.id == ItemType.GunLogicer).FirstOrDefault() != default)
-                {
-                    ev.Allow = false;
-                }
-                else
-                {
-                    SetItemModsComponent setItemModsComponent = ev.Player.gameObject.AddComponent<SetItemModsComponent>();
-                    setItemModsComponent.ItemType = ev.Item.info.itemId;
-                    setItemModsComponent.PlayerHub = ev.Player;
-                }
-            }
-            if (ev.Item.info.itemId == ItemType.MicroHID)
-            {
-                ev.Player.gameObject.AddComponent<MicroHIDDropComponent>();
             }
         }
 

@@ -1,4 +1,4 @@
-﻿using EXILED.Extensions;
+﻿using Exiled.API.Features;
 using UnityEngine;
 
 namespace BetterThanFalseTrail
@@ -6,11 +6,11 @@ namespace BetterThanFalseTrail
     internal class MicroHIDDropComponent : MonoBehaviour
     {
         private float Timer = 0.0f;
-        private ReferenceHub PlayerHub;
+        private Player Player;
 
         public void Start()
         {
-            PlayerHub = Player.GetPlayer(gameObject);
+            Player = Player.Get(gameObject);
         }
 
         public void Update()
@@ -19,7 +19,7 @@ namespace BetterThanFalseTrail
 
             if (Timer > Global.TimeToPickupMicroHID)
             {
-                if (PlayerHub.GetCurrentItem().id != ItemType.MicroHID)
+                if (Player.CurrentItem.id != ItemType.MicroHID)
                 {
                     MicroHIDDrop();
                 }
@@ -28,14 +28,13 @@ namespace BetterThanFalseTrail
         }
         private void MicroHIDDrop()
         {
-            for (int i = 0; i < PlayerHub.inventory.items.Count; i++)
+            for (int i = 0; i < Player.Inventory.items.Count; i++)
             {
-                if (PlayerHub.inventory.items[i].id == ItemType.MicroHID)
+                if (Player.Inventory.items[i].id == ItemType.MicroHID)
                 {
-                    PlayerHub.ClearBroadcasts();
-                    PlayerHub.Broadcast(10, "Вы обронили Micro H.I.D.", true);
-                    Map.SpawnItem(ItemType.MicroHID, PlayerHub.inventory.items[i].durability, PlayerHub.gameObject.transform.position, PlayerHub.gameObject.transform.rotation, PlayerHub.inventory.items[i].modSight, PlayerHub.inventory.items[i].modBarrel, PlayerHub.inventory.items[i].modOther);
-                    PlayerHub.inventory.items.Remove(PlayerHub.inventory.items[i]);
+                    Player.ClearBroadcasts();
+                    Player.Broadcast(10, "Вы обронили Micro H.I.D.", Broadcast.BroadcastFlags.Normal);
+                    Player.DropItem(Player.Inventory.items[i]);
                     break;
                 }
             }

@@ -1,4 +1,4 @@
-﻿using EXILED.Extensions;
+﻿using Exiled.API.Features;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,42 +18,42 @@ namespace BetterThanFalseTrail
             {
                 Timer = 0.0f;
 
-                List<ReferenceHub> scientists = new List<ReferenceHub>();
-                List<ReferenceHub> guards = new List<ReferenceHub>();
+                List<Player> scientists = new List<Player>();
+                List<Player> guards = new List<Player>();
 
-                foreach (ReferenceHub referenceHub in Player.GetHubs())
+                foreach (Player player in Player.List)
                 {
-                    if (referenceHub.GetRole() == RoleType.Scp049 && !Global.InWhitelistCommander(referenceHub.GetUserId()))
+                    if (player.Role == RoleType.Scp049 && !Global.InWhitelistCommander(player.UserId))
                     {
-                        referenceHub.SetRole(RoleType.Scp0492, true);
+                        player.SetRole(RoleType.Scp0492, true);
                     }
-                    if (!Global.InWhitelistManager(referenceHub.GetUserId()))
+                    if (!Global.InWhitelistManager(player.UserId))
                         continue;
-                    if (referenceHub.GetRole() == RoleType.Scientist)
+                    if (player.Role == RoleType.Scientist)
                     {
-                        scientists.Add(referenceHub);
+                        scientists.Add(player);
                     }
-                    else if (referenceHub.GetRole() == RoleType.FacilityGuard)
+                    else if (player.Role == RoleType.FacilityGuard)
                     {
-                        guards.Add(referenceHub);
+                        guards.Add(player);
                     }
                 }
 
                 if (scientists.Count > 0)
                 {
-                    ReferenceHub manager = scientists[rand.Next(0, scientists.Count)];
+                    Player manager = scientists[rand.Next(0, scientists.Count)];
                     manager.AddItem(ItemType.KeycardFacilityManager);
                     manager.ClearBroadcasts();
-                    manager.Broadcast(30, "<color=#876c99>Вы - директор комплекса</color>", true);
-                    Global.CurrentManagerPlayerId = manager.GetPlayerId();
+                    manager.Broadcast(30, "<color=#876c99>Вы - директор комплекса</color>", Broadcast.BroadcastFlags.Normal);
+                    Global.CurrentManagerPlayerId = manager.Id;
                 }
                 if (guards.Count > 0)
                 {
-                    ReferenceHub chiefguard = guards[rand.Next(0, guards.Count)];
+                    Player chiefguard = guards[rand.Next(0, guards.Count)];
                     chiefguard.AddItem(ItemType.KeycardNTFLieutenant);
                     chiefguard.ClearBroadcasts();
-                    chiefguard.Broadcast(30, "<color=#876c99>Вы - начальник службы безопасности</color>", true);
-                    Global.CurrentSecurityChiefPlayerId = chiefguard.GetPlayerId();
+                    chiefguard.Broadcast(30, "<color=#876c99>Вы - начальник службы безопасности</color>", Broadcast.BroadcastFlags.Normal);
+                    Global.CurrentSecurityChiefPlayerId = chiefguard.Id;
                 }
 
                 Destroy(this);

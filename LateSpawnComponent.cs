@@ -1,4 +1,4 @@
-﻿using EXILED.Extensions;
+﻿using Exiled.API.Features;
 using UnityEngine;
 
 namespace BetterThanFalseTrail
@@ -7,11 +7,11 @@ namespace BetterThanFalseTrail
     {
         private float Timer = 0.0f;
         private readonly float TimeIsUp = 0.1f;
-        private ReferenceHub PlayerHub;
+        private Player Player;
         public RoleType RoleType = RoleType.Spectator;
         public void Start()
         {
-            PlayerHub = Player.GetPlayer(gameObject);
+            Player = Player.Get(gameObject);
         }
 
         public void Update()
@@ -22,7 +22,7 @@ namespace BetterThanFalseTrail
             {
                 Timer = 0.0f;
                 if (RoleType != RoleType.Spectator)
-                    PlayerHub.SetRole(RoleType);
+                    Player.SetRole(RoleType);
 
                 Destroy(this);
             }

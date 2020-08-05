@@ -1,47 +1,47 @@
-﻿using EXILED;
+﻿using Exiled.API.Features;
 
 namespace BetterThanFalseTrail
 {
-    public class MainSettings : Plugin
+    public class MainSettings : Plugin<Config>
     {
-        public override string getName => nameof(BetterThanFalseTrail);
+        public override string Name => nameof(BetterThanFalseTrail);
         public SetEvents SetEvents { get; set; }
 
-        public override void OnEnable()
+        public override void OnEnabled()
         {
             SetEvents = new SetEvents();
-            Events.GeneratorInsertedEvent += SetEvents.OnGeneratorInserted;
-            Events.PickupItemEvent += SetEvents.OnPickupItem;
-            Events.ItemChangedEvent += SetEvents.OnItemChanged;
-            Events.UseMedicalItemEvent += SetEvents.OnUseMedicalItem;
-            Events.UsedMedicalItemEvent += SetEvents.OnUsedMedicalItem;
-            Events.CancelMedicalItemEvent += SetEvents.OnCancelMedicalItem;
-            Events.PlayerDeathEvent += SetEvents.OnPlayerDeath;
-            Events.PlayerSpawnEvent += SetEvents.OnPlayerSpawn;
-            Events.WaitingForPlayersEvent += SetEvents.OnWaitingsForPlayers;
-            Events.RoundStartEvent += SetEvents.OnRoundStart;
-            Events.ConsoleCommandEvent += SetEvents.OnConsoleCommand;
-            Events.TeamRespawnEvent += SetEvents.OnTeamRespawn;
-            Log.Info(getName + " on");
+            Exiled.Events.Handlers.Player.InsertingGeneratorTablet += SetEvents.OnInsertingGeneratorTablet;
+            Exiled.Events.Handlers.Player.PickingUpItem += SetEvents.OnPickingUpItem;
+            Exiled.Events.Handlers.Player.ChangingItem += SetEvents.OnChangingItem;
+            Exiled.Events.Handlers.Player.UsingMedicalItem += SetEvents.OnUsingMedicalItem;
+            Exiled.Events.Handlers.Player.MedicalItemUsed += SetEvents.OnMedicalItemUsed;
+            Exiled.Events.Handlers.Player.StoppingMedicalItem += SetEvents.OnStoppingMedicalItem;
+            Exiled.Events.Handlers.Player.Spawning += SetEvents.OnSpawning;
+            Exiled.Events.Handlers.Server.WaitingForPlayers += SetEvents.OnWaitingsForPlayers;
+            Exiled.Events.Handlers.Server.RoundStarted += SetEvents.OnRoundStarted;
+            Exiled.Events.Handlers.Server.SendingConsoleCommand += SetEvents.OnSendingConsoleCommand;
+            Exiled.Events.Handlers.Server.RespawningTeam += SetEvents.OnRespawningTeam;
+            Exiled.Events.Handlers.Server.SendingRemoteAdminCommand += SetEvents.OnSendingRemoteAdminCommand;
+            Exiled.Events.Handlers.Player.ChangingRole += SetEvents.OnChangingRole;
+            Log.Info(Name + " on");
         }
 
-        public override void OnDisable()
+        public override void OnDisabled()
         {
-            Events.GeneratorInsertedEvent -= SetEvents.OnGeneratorInserted;
-            Events.PickupItemEvent -= SetEvents.OnPickupItem;
-            Events.ItemChangedEvent -= SetEvents.OnItemChanged;
-            Events.UseMedicalItemEvent -= SetEvents.OnUseMedicalItem;
-            Events.UsedMedicalItemEvent -= SetEvents.OnUsedMedicalItem;
-            Events.CancelMedicalItemEvent -= SetEvents.OnCancelMedicalItem;
-            Events.PlayerDeathEvent -= SetEvents.OnPlayerDeath;
-            Events.PlayerSpawnEvent -= SetEvents.OnPlayerSpawn;
-            Events.WaitingForPlayersEvent -= SetEvents.OnWaitingsForPlayers;
-            Events.RoundStartEvent -= SetEvents.OnRoundStart;
-            Events.ConsoleCommandEvent -= SetEvents.OnConsoleCommand;
-            Events.TeamRespawnEvent -= SetEvents.OnTeamRespawn;
-            Log.Info(getName + " off");
+            Exiled.Events.Handlers.Player.InsertingGeneratorTablet -= SetEvents.OnInsertingGeneratorTablet;
+            Exiled.Events.Handlers.Player.PickingUpItem -= SetEvents.OnPickingUpItem;
+            Exiled.Events.Handlers.Player.ChangingItem -= SetEvents.OnChangingItem;
+            Exiled.Events.Handlers.Player.UsingMedicalItem -= SetEvents.OnUsingMedicalItem;
+            Exiled.Events.Handlers.Player.MedicalItemUsed -= SetEvents.OnMedicalItemUsed;
+            Exiled.Events.Handlers.Player.StoppingMedicalItem -= SetEvents.OnStoppingMedicalItem;
+            Exiled.Events.Handlers.Player.Spawning -= SetEvents.OnSpawning;
+            Exiled.Events.Handlers.Server.WaitingForPlayers -= SetEvents.OnWaitingsForPlayers;
+            Exiled.Events.Handlers.Server.RoundStarted -= SetEvents.OnRoundStarted;
+            Exiled.Events.Handlers.Server.SendingConsoleCommand -= SetEvents.OnSendingConsoleCommand;
+            Exiled.Events.Handlers.Server.RespawningTeam -= SetEvents.OnRespawningTeam;
+            Exiled.Events.Handlers.Server.SendingRemoteAdminCommand -= SetEvents.OnSendingRemoteAdminCommand;
+            Exiled.Events.Handlers.Player.ChangingRole -= SetEvents.OnChangingRole;
+            Log.Info(Name + " off");
         }
-
-        public override void OnReload() { }
     }
 }

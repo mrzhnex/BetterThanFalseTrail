@@ -21,7 +21,7 @@ namespace BetterThanFalseTrail
 
         public static int CurrentSecurityChiefPlayerId = 0;
 
-        public static int AvailableCommanderPlayerId = 0;
+        public static List<int> AvailableCommanderPlayerId = new List<int>();
 
         public static readonly float TimeToVoteCommander = 30.0f;
 
