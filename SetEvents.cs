@@ -166,7 +166,7 @@ namespace BetterThanFalseTrail
         {
             if (ev.Arguments.Count != 2 || ev.Name.ToLower() != "forceclass" || !int.TryParse(ev.Arguments[1], out int roleId) || roleId != 12)
                 return;
-            if (!int.TryParse(ev.Arguments[1].Substring(0, ev.Arguments[0].Length - 1), out int playerId))
+            if (!int.TryParse(ev.Arguments[0].Substring(0, ev.Arguments[0].Length - 1), out int playerId))
                 return;
             if (!Global.AvailableCommanderPlayerId.Contains(playerId))
             {
