@@ -36,5 +36,22 @@ namespace BetterThanFalseTrail
         {
             return WhitelistManager.Contains(steamId.Replace("@steam", string.Empty));
         }
+
+        public static float time_to_contain_096 = 15.0f;
+        public static string _outofscp096 = "SCP 096 нет рядом";
+        public static string _successstartcontain096 = "Вы надеваете мешок на SCP 096. Ждите: ";
+        public static string _noticescp096 = "На вас надевают мешок";
+        public static string announcecontainscp096 = "SCP 0 9 6 ContainedSuccessfully . ";
+        public static string _alreadycontainproccess096 = "Другой гуманоид уже надевает мешок";
+        public static string _failedcontain096and173 = "Вы отошли слишком далеко. Процесс прерван";
+
+        public static float time_to_contain_173 = 40.0f;
+        public static string _outofscp173 = "SCP 173 нет рядом";
+        public static string _successstartcontain173 = "Вы собираете клетку 173. Ждите: ";
+        public static string _noticescp173 = "Вас помещают в клетку";
+        public static string announcecontainscp173 = "SCP 1 7 3 ContainedSuccessfully . ";
+        public static string _alreadycontainproccess173 = "Другой гуманоид уже собирает клетку";
+
+        public static float distanceForContain096And173 = 2.0f;
     }
 }

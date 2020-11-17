@@ -84,7 +84,7 @@ namespace BetterThanFalseTrail
         {
             if (ev.Name.ToLower() == "islegit")
             {
-                if (Physics.Raycast((ev.Player.PlayerCamera.forward * 1.001f) + ev.Player.GameObject.transform.position, ev.Player.PlayerCamera.forward, out RaycastHit hit, 2.0f))
+                if (Physics.Raycast((ev.Player.CameraTransform.forward * 1.001f) + ev.Player.GameObject.transform.position, ev.Player.CameraTransform.forward, out RaycastHit hit, 2.0f))
                 {
                     if (hit.transform.GetComponent<QueryProcessor>() == null)
                     {
@@ -159,6 +159,78 @@ namespace BetterThanFalseTrail
                 commanderVoteComponent.PlayersAlreadyVotes.Add(ev.Player.Id);
                 ev.ReturnMessage = "Вы проголосовали за игрока с номером " + playerId;
                 return;
+            }
+            else if (ev.Name.ToLower().Contains("contain") && ev.Name.ToLower().Contains("96"))
+            {
+                Player scp096 = Player.List.Where(x => x.Role == RoleType.Scp096).FirstOrDefault();
+                if (scp096 == default)
+                {
+                    ev.ReturnMessage = Global._outofscp096;
+                    return;
+                }
+                if (ev.Player.Team == Team.SCP)
+                {
+                    ev.ReturnMessage = Global._outofscp096;
+                    return;
+                }
+                foreach (GameObject gameplayer in PlayerManager.players)
+                {
+                    if (gameplayer.GetComponent<Contain096OwnerComponent>() != null)
+                    {
+                        ev.ReturnMessage = Global._alreadycontainproccess096;
+                        return;
+                    }
+                }
+                if (Vector3.Distance(ev.Player.Position, scp096.Position) < Global.distanceForContain096And173)
+                {
+
+                    ev.Player.GameObject.AddComponent<Contain096OwnerComponent>();
+                    ev.Player.GameObject.GetComponent<Contain096OwnerComponent>().owner = ev.Player;
+                    ev.Player.GameObject.GetComponent<Contain096OwnerComponent>().scp096 = scp096;
+                    ev.ReturnMessage = Global._successstartcontain096 + Global.time_to_contain_096;
+                    return;
+                }
+                else
+                {
+                    ev.ReturnMessage = Global._outofscp096;
+                    return;
+                }
+            }
+            else if (ev.Name.ToLower().Contains("contain") && ev.Name.ToLower().Contains("173"))
+            {
+                Player scp173 = Player.List.Where(x => x.Role == RoleType.Scp173).FirstOrDefault();
+                if (scp173 == default)
+                {
+                    ev.ReturnMessage = Global._outofscp173;
+                    return;
+                }
+                if (ev.Player.Team == Team.SCP)
+                {
+                    ev.ReturnMessage = Global._outofscp173;
+                    return;
+                }
+                foreach (GameObject gameplayer in PlayerManager.players)
+                {
+                    if (gameplayer.GetComponent<Contain173OwnerComponent>() != null)
+                    {
+                        ev.ReturnMessage = Global._alreadycontainproccess173;
+                        return;
+                    }
+                }
+                if (Vector3.Distance(ev.Player.Position, scp173.Position) < Global.distanceForContain096And173)
+                {
+
+                    ev.Player.GameObject.AddComponent<Contain173OwnerComponent>();
+                    ev.Player.GameObject.GetComponent<Contain173OwnerComponent>().owner = ev.Player;
+                    ev.Player.GameObject.GetComponent<Contain173OwnerComponent>().scp173 = scp173;
+                    ev.ReturnMessage = Global._successstartcontain173 + Global.time_to_contain_173;
+                    return;
+                }
+                else
+                {
+                    ev.ReturnMessage = Global._outofscp173;
+                    return;
+                }
             }
         }
 
