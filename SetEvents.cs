@@ -256,6 +256,10 @@ namespace BetterThanFalseTrail
 
         internal void OnSpawning(SpawningEventArgs ev)
         {
+            if (ev.Player.GameObject.GetComponent<FallingBehaviour>())
+            {
+                UnityEngine.Object.Destroy(ev.Player.GameObject.GetComponent<FallingBehaviour>());
+            }
             if (ev.Player.GameObject.GetComponent<UseMedicalItemComponent>())
             {
                 UnityEngine.Object.Destroy(ev.Player.GameObject.GetComponent<UseMedicalItemComponent>());
@@ -328,6 +332,11 @@ namespace BetterThanFalseTrail
                     commanderVoteComponent.PlayersVotes = Global.PlayersVotes;
                     Global.PlayersVotes = new Dictionary<int, int>();
                 }
+            }
+
+            if (new RoleType[] { RoleType.Scp93953, RoleType.Scp93989, RoleType.Scp0492, RoleType.Scp049, RoleType.Scp173 }.Contains(ev.RoleType))
+            {
+                ev.Player.GameObject.AddComponent<FallingBehaviour>();
             }
         }
 

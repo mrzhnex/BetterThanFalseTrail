@@ -36,6 +36,7 @@
     <Compile Include="Config.cs" />
     <Compile Include="Contain096OwnerComponent.cs" />
     <Compile Include="Contain173OwnerComponent.cs" />
+    <Compile Include="FallingBehaviour.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="LateSpawnComponent.cs" />
     <Compile Include="MainSettings.cs" />
