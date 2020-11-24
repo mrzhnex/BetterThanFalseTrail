@@ -109,12 +109,12 @@ namespace BetterThanFalseTrail
                     }
                     else if (target.Id == Global.CurrentSecurityChiefPlayerId && target.CurrentItem.id == ItemType.KeycardNTFLieutenant)
                     {
-                        ev.ReturnMessage = "Перед вами настоящий начальник СБ";
+                        ev.ReturnMessage = "Перед вами настоящий сержант СБ";
                         return;
                     }
                     else
                     {
-                        ev.ReturnMessage = "Перед вами ненастоящий начальник СБ/Директор Зоны";
+                        ev.ReturnMessage = "Перед вами ненастоящий сержант СБ/Директор Зоны";
                         return;
                     }
                 }

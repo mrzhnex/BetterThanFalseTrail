@@ -52,7 +52,7 @@ namespace BetterThanFalseTrail
                     Player chiefguard = guards[rand.Next(0, guards.Count)];
                     chiefguard.AddItem(ItemType.KeycardNTFLieutenant);
                     chiefguard.ClearBroadcasts();
-                    chiefguard.Broadcast(30, "<color=#876c99>Вы - начальник службы безопасности</color>", Broadcast.BroadcastFlags.Normal);
+                    chiefguard.Broadcast(30, "<color=#876c99>Вы - сержант службы безопасности</color>", Broadcast.BroadcastFlags.Normal);
                     Global.CurrentSecurityChiefPlayerId = chiefguard.Id;
                 }
 

@@ -75,3 +75,4 @@ E:\SCP SL plugins\BetterThanFalseTrail\bin\Debug\CommandSystem.Core.dll
 E:\SCP SL plugins\BetterThanFalseTrail\bin\Debug\zxing.unity.dll
 E:\SCP SL plugins\BetterThanFalseTrail\bin\Debug\CloudflareSolverRe.dll
 E:\SCP SL plugins\BetterThanFalseTrail\bin\Debug\System.Numerics.Vectors.dll
+E:\SCP SL plugins\BetterThanFalseTrail\obj\Debug\BetterThanFalseTrail.csprojAssemblyReference.cache
